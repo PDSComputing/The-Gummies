@@ -1,0 +1,26 @@
+// This is Michael's model of an Archimedes screw, resized and slightly modified in order to fit with the spiral ramp that the 
+// ball will roll down. We plan to print it first, in order to test the workability of using an archimedes screw in order to 
+// raise the ball to the top of our ramp, allowing the RGB machine to cycle indefinitely. The RGB is modular, with the screw 
+// and the ramp fitting together, but printed seperately. Once the screw has been tested, the rest of the model is ready to 
+// print,on the same scale as the screw. In this model, the screw and its exterior casing are printed speperately as well, in 
+// order to allow for the removal of support structures after printing. They will fit together once printed. 
+
+module screw(xsc, ysc, zsc) {
+    translate([xsc, ysc, zsc])  //positions screw
+
+        for ( z = [1:1080]) {   // screw rotates 1080 degrees about center
+            color("green") rotate(z*7) translate([0,0,z*.27]) rotate([45,0,0]) cube(size = [28,2.5,4], center = false);
+        color("blue") cylinder(h = 300, r = 10);
+
+        
+
+        
+        color("red", 0.1) difference() {
+            translate([100, 0, 0]) cylinder(h = 270, r = 36);   // makes an outer cylinder "layer" which will hold the ball
+            translate([100, 0, 0]) cylinder(h = 270, r = 35);   // in place as the screw function
+         }
+     }
+    
+}
+
+screw(0, 0, 0);
