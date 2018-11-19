@@ -1,0 +1,48 @@
+// This is Michael and Nachman's model. I did not make it, I was going to try and make a model of the stand we had in our plans (the gummy bear stand) and I might submit that seperately if I can finish it, it is pretty much a table. The archimedes screw has a cylinder long column going up through the center, and then a step like corkscrew wrapping around the column. 
+
+
+
+
+
+module screw(xsc, ysc, zsc) {
+    translate([xsc, ysc, zsc])
+    
+        translate([100, 0, 0]) for ( z = [1:1080]) {
+            color("green") rotate(z*7) translate([0,0,z*.27]) rotate([45,0,0]) cube(size = [28,2.5,4], center = false); // this is the corkscrew, nachman moved it, thus the translate part, but it is green and has cube stair steps. 
+        
+
+        
+        difference() {
+            color("blue") cylinder(h = 300, r = 10);
+            translate([0, 0, 0]) cube(5, center = true); // this is the cylinder that is going up through the corkscrew structure
+        }
+
+     } 
+}
+
+screw(0, 0, 0);
+
+
+color("red", 0.1) difference() {
+            
+            translate([0, 0, 15]) cylinder(h = 270, r = 37);
+            translate([100, 0, 15]) cylinder(h = 270, r = 35);
+}
+
+difference() {
+    cylinder(h = 15, r = 37);
+    union() {
+        translate([-40, 0, 0]) cube(80, center = false);
+        translate([0, 0, 0]) cylinder(h = 270, r = 36);
+    }
+}
+
+
+
+translate([0, 0, 285]) difference() {
+    cylinder(h = 15, r = 36);
+    union() {
+        translate([-40, 0, 0]) cube(80, center = false);
+        translate([0, 0, 0]) cylinder(h=270, r = 35);
+    }
+}
