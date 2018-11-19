@@ -5,22 +5,50 @@
 // print,on the same scale as the screw. In this model, the screw and its exterior casing are printed speperately as well, in 
 // order to allow for the removal of support structures after printing. They will fit together once printed. 
 
+
 module screw(xsc, ysc, zsc) {
-    translate([xsc, ysc, zsc])  //positions screw
-
-        for ( z = [1:1080]) {   // screw rotates 1080 degrees about center
-            color("green") rotate(z*7) translate([0,0,z*.27]) rotate([45,0,0]) cube(size = [28,2.5,4], center = false);
-        color("blue") cylinder(h = 300, r = 10);
-
-        
-
-        
-        color("red", 0.1) difference() {
-            translate([100, 0, 0]) cylinder(h = 270, r = 36);   // makes an outer cylinder "layer" which will hold the ball
-            translate([100, 0, 0]) cylinder(h = 270, r = 35);   // in place as the screw function
-         }
-     }
+    translate([xsc, ysc, zsc])
     
+        translate([100, 0, 0]) for ( z = [1:1080]) {
+            color("green") rotate(z*7) translate([0,0,z*.27]) rotate([45,0,0]) cube(size = [28,2.5,4], center = false);
+        
+
+        
+        difference() {
+            color("blue") cylinder(h = 300, r = 10);
+            translate([0, 0, 0]) cube(5, center = true);
+        }
+
+     } 
 }
 
 screw(0, 0, 0);
+
+
+color("red", 0.1) difference() {
+            
+            translate([0, 0, 15]) cylinder(h = 270, r = 37);
+            translate([100, 0, 15]) cylinder(h = 270, r = 35);
+}
+
+difference() {
+    cylinder(h = 15, r = 37);
+    union() {
+        translate([-40, 0, 0]) cube(80, center = false);
+        translate([0, 0, 0]) cylinder(h = 270, r = 36);
+    }
+}
+
+
+
+translate([0, 0, 285]) difference() {
+    cylinder(h = 15, r = 36);
+    union() {
+        translate([-40, 0, 0]) cube(80, center = false);
+        translate([0, 0, 0]) cylinder(h=270, r = 35);
+    }
+}
+
+
+
+
