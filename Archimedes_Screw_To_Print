@@ -6,15 +6,16 @@
 // order to allow for the removal of support structures after printing. They will fit together once printed. 
 
 
-module screw(xsc, ysc, zsc) {
+module screw(xsc, ysc, zsc) {           // draws the screw using rotating steps, and a changing z value  
     translate([xsc, ysc, zsc])
     
-        translate([100, 0, 0]) for ( z = [1:1080]) {
+        translate([100, 0, 0]) for ( z = [1:1080]) {            // seperates different components for easy printing
             color("green") rotate(z*7) translate([0,0,z*.27]) rotate([45,0,0]) cube(size = [28,2.5,4], center = false);
-        
+                                                                // Actually draws out and positions the rungs
 
         
-        difference() {
+        difference() {                                          // a small cubic indent in the bottom of the screw allows
+                                                                // to interface with a motor, given a custom printed connector
             color("blue") cylinder(h = 300, r = 10);
             translate([0, 0, 0]) cube(5, center = true);
         }
@@ -23,7 +24,8 @@ module screw(xsc, ysc, zsc) {
 }
 
 screw(0, 0, 0);
-
+                                                                // code below makes makes up sleeve in order to hold ball in 
+                                                                // place as screw is in operation
 
 color("red", 0.1) difference() {
             
@@ -31,7 +33,7 @@ color("red", 0.1) difference() {
             translate([100, 0, 15]) cylinder(h = 270, r = 35);
 }
 
-difference() {
+difference() {                          
     cylinder(h = 15, r = 37);
     union() {
         translate([-40, 0, 0]) cube(80, center = false);
