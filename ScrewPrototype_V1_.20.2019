@@ -73,7 +73,6 @@ module ascrew() {
 }
 ascrew();
 
-translate([24, 5, 10]) sphere(d=17);
 
     
     
