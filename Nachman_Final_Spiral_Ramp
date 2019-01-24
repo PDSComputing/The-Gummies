@@ -1,12 +1,12 @@
-// This program is a fully parameterized tool which allows the user to create spiral ramps with supports with various specifications
+// This program is a fully parameterized tool which allows the user to create fully supported spiral ramps to any specifications
 
 
 // module step creates one section of track. Each section of ramp track is parameterized so that it can have any given thickness
 // or width. Walls of some height and thickness are adjacent to the trick on both sides.
 
 module step(trackwidth, stepsize, stepthickness, wallthickness, wallheight) {   
-    color("green") cube([trackwidth, stepsize, stepthickness], center = true );
-    color("blue")translate([trackwidth/2 + 0.5, 0, (wallheight-stepthickness)/2])    cube([wallthickness, stepsize, wallheight], center=true);
+    color("green") cube([trackwidth, stepsize, stepthickness], center = true );     // makes a rectanguar which constitutes the base of the track
+    color("blue")translate([trackwidth/2 + 0.5, 0, (wallheight-stepthickness)/2])    cube([wallthickness, stepsize, wallheight], center=true); // positions walls according to specs of track base
     color("blue")translate([-(trackwidth/2 + 0.5), 0, (wallheight-stepthickness)/2]) cube([wallthickness, stepsize, wallheight], center=true);
 }
 
@@ -16,11 +16,11 @@ module step(trackwidth, stepsize, stepthickness, wallthickness, wallheight) {
 // step each time it is called within spiral.
 
 module spiral(startangle, stopangle, radius, trackwidth, stepsize, stepthickness, wallthickness, wallheight, zstretch) {
-    for (a = [startangle:stepsize:stopangle]) {
-        x = cos(a) * radius;
-        y = sin(a) * radius;
-        z = a/zstretch;
-        translate([x, y, z]) rotate([0, 0, a]) step(trackwidth, stepsize, stepthickness, wallthickness, wallheight);  
+    for (a = [startangle:stepsize:stopangle]) {         // loops through each angle, frequency of values given by the size of each physical step
+        x = cos(a) * radius;                            // finds x coordinate for step according to definition of circle
+        y = sin(a) * radius;                            // finds y coordinate for step according to definition of circle
+        z = a/zstretch;                                 // finds z coordinate for step                 
+        translate([x, y, z]) rotate([0, 0, a]) step(trackwidth, stepsize, stepthickness, wallthickness, wallheight);  // calls function step, position each step
     }
 }
 
@@ -28,14 +28,14 @@ module spiral(startangle, stopangle, radius, trackwidth, stepsize, stepthickness
 // as function spiral, but takes into account the spiral's parameters in order to offset columns accordingly.
 
 module supports(startangle, stopangle, zstretch, columninterval, radius, columnlength, colummwidth, trackwidth, wallheight, stepthickness) {
-    for (a = [startangle:columninterval:stopangle]) {
-        x = cos(a) * (radius+(trackwidth+columnlength)/2);
-        y = sin(a) * (radius+(trackwidth+columnlength)/2);
-        z = a/zstretch;
-        columnheight = z + wallheight;
+    for (a = [startangle:columninterval:stopangle]) {           // gives values according to desired frequency of columns (in degrees)
+        x = cos(a) * (radius+(trackwidth+columnlength)/2);      // finds x coordinate for column according to definition of circle relative to spiral
+        y = sin(a) * (radius+(trackwidth+columnlength)/2);      // finds y coordinate for column according to definition of circle relative to spiral
+        z = a/zstretch;                                         
+        columnheight = z + wallheight;                          // find z coordinate for column relative to spiral
         z1 = 0.5 * columnheight;
         
-        color("green") translate([x, y, z1]) rotate([0, 0, a]) cube([columnlength, colummwidth, columnheight], center=true);
+        color("green") translate([x, y, z1]) rotate([0, 0, a]) cube([columnlength, colummwidth, columnheight], center=true); creates columns
     }   
 }
 
