@@ -1,0 +1,66 @@
+// This program is a fully parameterized tool which allows the user to create spiral ramps with supports with various specifications
+
+
+// module step creates one section of track. Each section of ramp track is parameterized so that it can have any given thickness
+// or width. Walls of some height and thickness are adjacent to the trick on both sides.
+
+module step(trackwidth, stepsize, stepthickness, wallthickness, wallheight) {   
+    color("green") cube([trackwidth, stepsize, stepthickness], center = true );
+    color("blue")translate([trackwidth/2 + 0.5, 0, (wallheight-stepthickness)/2])    cube([wallthickness, stepsize, wallheight], center=true);
+    color("blue")translate([-(trackwidth/2 + 0.5), 0, (wallheight-stepthickness)/2]) cube([wallthickness, stepsize, wallheight], center=true);
+}
+
+// Creates a spiral ramp out of sections produced by function step above, using the trigonometric definition of a circle while
+// varying the z value. The ramp opens from some startangle and terminates at some stopangle, has a given variable and "stretch 
+// coefficient" in the z direction. Parameters for function step are given as parameters for function spiral, and then passed to  
+// step each time it is called within spiral.
+
+module spiral(startangle, stopangle, radius, trackwidth, stepsize, stepthickness, wallthickness, wallheight, zstretch) {
+    for (a = [startangle:stepsize:stopangle]) {
+        x = cos(a) * radius;
+        y = sin(a) * radius;
+        z = a/zstretch;
+        translate([x, y, z]) rotate([0, 0, a]) step(trackwidth, stepsize, stepthickness, wallthickness, wallheight);  
+    }
+}
+
+// Creates supporting pillars of given dimensions, at a given frequency, outside the spiral ramp. Uses the same framework
+// as function spiral, but takes into account the spiral's parameters in order to offset columns accordingly.
+
+module supports(startangle, stopangle, zstretch, columninterval, radius, columnlength, colummwidth, trackwidth, wallheight, stepthickness) {
+    for (a = [startangle:columninterval:stopangle]) {
+        x = cos(a) * (radius+(trackwidth+columnlength)/2);
+        y = sin(a) * (radius+(trackwidth+columnlength)/2);
+        z = a/zstretch;
+        columnheight = z + wallheight;
+        z1 = 0.5 * columnheight;
+        
+        color("green") translate([x, y, z1]) rotate([0, 0, a]) cube([columnlength, colummwidth, columnheight], center=true);
+    }   
+}
+
+// Identical to function support; performs the same function on the inner side of the spiral.
+
+module innersupports(startangle, stopangle, zstretch, columninterval, radius, columnlength, colummwidth, trackwidth, wallheight, stepthickness) {
+    for (a = [startangle:columninterval:stopangle]) {
+        x = cos(a) * (radius-(trackwidth+columnlength)/2);
+        y = sin(a) * (radius-(trackwidth+columnlength)/2);
+        z = a/zstretch;
+        columnheight = z + wallheight;
+        z1 = 0.5 * columnheight;
+        
+        color("green") translate([x, y, z1]) rotate([0, 0, a]) cube([columnlength, colummwidth, columnheight], center=true);
+    }   
+}
+
+// Module ramp calls functions Spiral, supports, and innersupports in order to create fully parameterized spiral ramp.
+
+module ramp(startangle, stopangle, radius, trackwidth, stepsize, stepthickness, wallthickness, wallheight, zstretch, columninterval, columnlength, colummwidth) {
+    spiral(startangle, stopangle, radius, trackwidth, stepsize, stepthickness, wallthickness, wallheight, zstretch);
+    
+    supports(startangle, stopangle, zstretch, columninterval, radius, columnlength, colummwidth, trackwidth, wallheight, stepthickness);
+    innersupports(startangle, stopangle, zstretch, columninterval, radius, columnlength, colummwidth, trackwidth, wallheight, stepthickness);
+
+}
+
+ramp(0, 2160, 50, 10, 2, 1, 1, 7, 15, 15, 3, 3);
